@@ -4,7 +4,6 @@
 import numpy as np
 import os
 import sys
-from matplotlib import pyplot as plt
 import time
 from astropy.modeling.models import Ellipse2D
 import astropy.convolution as conv
@@ -12,7 +11,6 @@ import re
 import tarfile
 import gdal
 import geopandas as gpd
-from osgeo import ogr
 import osr
 
 s1 = time.time()
@@ -71,7 +69,10 @@ if tile_check is None:
 #Open shapefile and generate 300km buffer if not already created
 buffer_name = roi + '_300km_buffer.json'
 if not os.path.exists(buffer_name):
-    gdf = gpd.read_file(geodb, layer = roi, driver = 'FileGDB')
+    if geodb:
+        gdf = gpd.read_file(geodb, layer = roi, driver = 'FileGDB')
+    else:
+        gdf = gdp.read_file(roi)
     gdf_proj = gdf.to_crs({'init': 'epsg:{}'.format(out_proj)})
     gdf_buffer = gdf_proj.buffer(300*1000) #300 km in METERS
     gdf_buffer.to_file(buffer_name, driver = 'GeoJSON')
@@ -87,6 +88,7 @@ dataset = gdal.Open('/vsimem/tiffinmem', gdal.GA_ReadOnly)
 gt_orig = dataset.GetGeoTransform() #for getting original raster resolution
 x_orig_res, y_orig_res = gt_orig[1], -gt_orig[5]
 #Reproject and clip raster in memory
+
 OutTile = gdal.Warp('/vsimem/clipped_reprojected.tif',dataset,cutlineDSName=buffer_name, xRes = 450, 
                     yRes=450, srcSRS='EPSG:4326', 
                     dstSRS='EPSG:'+str(out_proj), cropToCutline=True, dstNodata=-9999)
@@ -156,9 +158,14 @@ outband = ds.GetRasterBand(1)
 outband.WriteArray(ALR)
 
 #Clip to region of interest (this is max extent that output is valid for) and reproject to original rad raster projection
-OutTile = gdal.Warp(ALR_ras.format(date_str), ds, cutlineDSName=geodb, xRes = x_orig_res, 
+if geodb:
+    OutTile = gdal.Warp(ALR_ras.format(date_str), ds, cutlineDSName=geodb, xRes = x_orig_res, 
                     yRes = y_orig_res, cutlineLayer = roi, srcSRS='EPSG:'+str(out_proj), 
                     dstSRS='EPSG:4326', cropToCutline = True, dstNodata=-9999)
+else:
+    OutTile = gdal.Warp(ALR_ras.format(date_str), ds, cutlineDSName=roi, xRes = x_orig_res, 
+                yRes = y_orig_res, srcSRS='EPSG:'+str(out_proj), 
+                dstSRS='EPSG:4326', cropToCutline = True, dstNodata=-9999)
 
 ds = None
 
