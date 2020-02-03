@@ -1,6 +1,9 @@
 # nps-night-rad
 This repository contains a collection of scripts for calculating all-sky average light pollution from satellite data and visualizing changes in night-time sky quality over time. It was created to understand the effects of nearby and faraway light sources on Big Bend National Park's sky quality, using open-source tools. 
 
+![image](https://raw.githubusercontent.com/katyabbott/nps-night-rad/master/images/2018_ALR_class.png?token=AJSRWDRNQYUEQFL6S2LRW3S6HCWLE)
+
+Night sky quality in 2018 in the Big Bend region, visualized by sky-quality classes.
 
 ## How the algorithm works
 [Duriscoe et al. (2018)](https://www.researchgate.net/publication/324789721_A_simplified_model_of_all-sky_artificial_sky_glow_derived_from_VIIRS_DayNight_band_data) used [VIIRs Day/Night Band upward radiance](https://maps.ngdc.noaa.gov/viewers/VIIRS_DNB_nighttime_imagery/index.html) to calculate what they called the all-sky average light pollution ratio (ALR), a unitless ratio of anthropogenic to natural conditions that takes into account the effects of skyglow over the entire hemisphere of vision.
