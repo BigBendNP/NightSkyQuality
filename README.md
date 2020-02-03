@@ -1,7 +1,7 @@
 # nps-night-rad
 This repository contains a collection of scripts for calculating all-sky average light pollution from satellite data and visualizing changes in night-time sky quality over time. It was created to understand the effects of nearby and faraway light sources on Big Bend National Park's sky quality, using open-source tools. 
 
-![image](https://raw.githubusercontent.com/katyabbott/nps-night-rad/master/images/2018_ALR_class.png?token=AJSRWDRNQYUEQFL6S2LRW3S6HCWLE)
+![image](https://raw.githubusercontent.com/katyabbott/nps-night-rad/master/images/2018_ALR_class.png)
 
 Night sky quality in 2018 in the Big Bend region, visualized by sky-quality classes.
 
