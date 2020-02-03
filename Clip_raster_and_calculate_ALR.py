@@ -1,7 +1,3 @@
-# -*- coding: cp1252 -*-
-##“C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv.bat 
-##cd U:\GIS_Projects\CARTO\2019_CARTO_NightRadianceModel\Documents\Code\Python
-
 # Written by Katy Abbott as part of the Geoscientists-in-the-Parks 
 # program at Big Bend National Park
 
@@ -22,9 +18,9 @@ import osr
 s1 = time.time()
 
 ## USER INPUTS - change these depending on your set-up
-working_dir = 'U:/GIS_PROJECTS/CARTO/2019_CARTO_NightRadianceModel/Data/RasterData/'
+working_dir = '../Data/RasterData/'
 geodb = '../BIBE_CORE_NightRadiance.gdb' #where buffer feature layers are stored
-roi = 'BIBE_Boundary_Buffer_300km' #region of interest, will ultimately clip output to this
+roi = 'BIBE_Boundary' #region of interest, will ultimately clip output to this
 name = 'BIBE' #ID for labeling outputs
 out_proj = 3083 #EPSG greater TX equal-area Albers. #Change this to reflect your location's equal-area Albers projection code.
 #Note that units should be meters for buffer calculation
