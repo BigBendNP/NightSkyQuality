@@ -8,9 +8,14 @@ Night sky quality in 2018 in the Big Bend region, visualized by sky-quality clas
 ## How the algorithm works
 [Duriscoe et al. (2018)](https://www.researchgate.net/publication/324789721_A_simplified_model_of_all-sky_artificial_sky_glow_derived_from_VIIRS_DayNight_band_data) used [VIIRs Day/Night Band upward radiance](https://maps.ngdc.noaa.gov/viewers/VIIRS_DNB_nighttime_imagery/index.html) to calculate what they called the all-sky average light pollution ratio (ALR), a unitless ratio of anthropogenic to natural conditions that takes into account the effects of skyglow over the entire hemisphere of vision.
 
-![image](https://www.nps.gov/subjects/nightskies/images/panoramic-big_1.jpg?maxwidth=650&autorotate=false) <br/>
-False color negative, panoramic image from Palomar Observatory (California Institute of Technology) identifies natural and human-caused sky brightness
+<p align="center">
+
+  <img src="https://www.nps.gov/subjects/nightskies/images/panoramic-big_1.jpg?maxwidth=650&autorotate=false">
+  <br/> False color negative, panoramic image from Palomar Observatory (California Institute of Technology) identifies natural and human-caused sky brightness <br/>
 NPS / Palomar Observatory (California Institute of Technology)
+
+</p>
+
 
 ALR at a point can be calculated by summing the contributions of individual upward radiance values, weighted by their distance from the point, up to a radius of 300 km away. i.e. ALR = c &sum;r<sub>i</sub>d<sub>i</sub><sup>-&alpha;</sup>, where c is a calibration constant to compare the calculated output to observation data, &alpha; is a weighting function relating brightness to distance, d<sub>i</sub> is the distance from the point, and r<sub>i</sub> is the upward radiance at the distance of interest.
 
