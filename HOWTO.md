@@ -8,6 +8,10 @@ Finally, it reclips the result to the region of interest and saves the output to
 
 Because the algorithm calculates the effects of light up to 300 km away from an area of interest, a buffer of 300 km around the user-provided polygon will be generated and used to calculate ALR; the output will later be reclipped to the original polygon. Keep this in mind when selecting tile images from the VIIRS DNB. 
 
+<p align="center">
+<img src="/images/buffer_example_crop.jpg" height="500" width="500">
+</p>
+
 ## Set-up
 
 Start by opening `Clip_raster_and_calculate_ALR_Python.py` and navigate to the `## USER INPUTS` section, line 24. You'll want to change all of these variables to match your set-up. <br/>
