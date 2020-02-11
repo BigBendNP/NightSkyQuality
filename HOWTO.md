@@ -1,10 +1,12 @@
 # Tutorial: How to run the NPS night-time radiance calculation
 
-`Clip_raster_and_calculate_ALR_Python.py` takes in a compressed tgz of night-time radiance composites from the VIIRS DNB, processed by the Earth Observations Group. You can download the composites [here](https://eogdata.mines.edu/download_dnb_composites.html).
+`Clip_raster_and_calculate_ALR_Python.py` takes in a compressed tgz of night-time radiance composites from the VIIRS DNB, processed by the Earth Observations Group. You can download the composites by month and by location [here](https://eogdata.mines.edu/download_dnb_composites.html).
 
-It reads the compressed file into memory, clips to a polygon specified by the user (that should have a buffer of 300 km around the intended region of interest) and reprojects to an equal-area Albers projection. It then uses a neighborhood annulus method to calculate the effect of night-time light at varying distances from a source. 
+The script reads the compressed file into memory, clips to a buffered polygon specified by the user and reprojects to an equal-area Albers projection. It then uses a neighborhood annulus method to calculate the effect of night-time light at varying distances from a source. 
 
 Finally, it reclips the result to the region of interest and saves the output to a destination folder.
+
+Because the algorithm calculates the effects of light up to 300 km away from an area of interest, a buffer of 300 km around the user-provided polygon will be generated and used to calculate ALR; the output will later be reclipped to the original polygon. Keep this in mind when selecting tile images from the VIIRS DNB. 
 
 ## Set-up
 
