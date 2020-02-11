@@ -9,7 +9,8 @@ Finally, it reclips the result to the region of interest and saves the output to
 Because the algorithm calculates the effects of light up to 300 km away from an area of interest, a buffer of 300 km around the user-provided polygon will be generated and used to calculate ALR; the output will later be reclipped to the original polygon. Keep this in mind when selecting tile images from the VIIRS DNB. 
 
 <p align="center">
-<img src="/images/buffer_example_crop.jpg" height="500" width="500">
+<img src="/images/buffer_example_crop.jpg" height="400" width="400">
+    <br/> An example of how the satellite data is buffered and cropped.
 </p>
 
 ## Set-up
