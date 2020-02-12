@@ -49,7 +49,6 @@ To calculate ALR for multiple months, you can write a batch script such as:
 REM cd ..\Documents\Code
 
 for %%I in (..\..\Data\RasterData\DNB_VIIRS_EOG\May_Nov_data\*.tgz) do (echo %%I & python Code_to_calculate_ALR\Clip_raster_and_calculate_ALR.py %%~fI)
-
 ```
 
 ## Other
