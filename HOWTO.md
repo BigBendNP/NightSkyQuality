@@ -13,16 +13,22 @@ Because the algorithm calculates the effects of light up to 300 km away from an 
     <br/> An example of how the satellite data is buffered and cropped.
 </p>
 
+## Before running the code
+
+1. Download the nighttime radiance composites from the VIIRS DNB, available [here](https://eogdata.mines.edu/download_dnb_composites.html). Pick the tile that corresponds to your region. 
+2. Make sure you have a polygon that represents the region you're interested in. 
+3. Install the necessary dependencies (see below).
+
 ## Set-up
 
 Start by opening `Clip_raster_and_calculate_ALR_Python.py` and navigate to the `## USER INPUTS` section, line 24. You'll want to change all of these variables to match your set-up. <br/>
-`working_dir` is where you want to store all your outputs. <br/>
-`geodb` is the location of a File GDB you're using to store the feature class representing the region you're interested in. If you're using a shapefile, set this equal to False. <br/>
-`roi` is the region of interest, either the name of a feature class or path to a shapefile. <br/>
-`name` is used for labeling raster output. <br/>
-`out_proj` should be an equal-area Albers projection, to ensure accuracy with the convolution process. Look up the EPSG code that corresponds to the correct projection for your region. <br/>
-`image_tile` is the tile value selected from the VIIRS/DNB composites. <br/>
-`verbosity` gives you the option to log output as the program runs.
+* `working_dir` is where you want to store all your outputs. <br/>
+* `geodb` is the location of a File GDB you're using to store the feature class representing the region you're interested in. If you're using a shapefile, set this equal to False. <br/>
+* `roi` is the region of interest, either the name of a feature class or path to a shapefile. <br/>
+* `name` is used for labeling raster output. <br/>
+* `out_proj` should be an equal-area Albers projection, to ensure accuracy with the convolution process. Look up the EPSG code that corresponds to the correct projection for your region. <br/>
+* `image_tile` is the tile value selected from the VIIRS/DNB composites. <br/>
+* `verbosity` gives you the option to log output as the program runs.
 
 You should not need to change any other inputs!
 
@@ -36,7 +42,15 @@ You can run the code via:
 
 `python Clip_raster_and_calculate_ALR_Python.py [path_to_DNB_tgz_file.tgz]`
 
-The outputs will be saved to a folder called `ALR_outputs`
+The outputs will be saved to a folder called `ALR_outputs`.
+
+To calculate ALR for multiple months, you can write a batch script such as: 
+```REM U:
+REM cd ..\Documents\Code
+
+for %%I in (..\..\Data\RasterData\DNB_VIIRS_EOG\May_Nov_data\*.tgz) do (echo %%I & python Code_to_calculate_ALR\Clip_raster_and_calculate_ALR.py %%~fI)
+
+```
 
 ## Other
 * `CreateMosaicDataset.py` is a quick and dirty way to create a mosaic dataset of your ALR raster outputs, which can then be manipulated to display changes in ALR over time.
