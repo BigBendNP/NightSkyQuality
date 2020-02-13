@@ -26,7 +26,7 @@ for file in files:
         date_str = re.search(re_date_str, file)[0]
     except TypeError:
         print("Error!")
-        continue #i.e. if you're opening a classification file, skip to next file
+        continue #i.e. if you're opening a classification file, which has a different date_str format, skip to next file
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
     ras = band.ReadAsArray()
@@ -46,7 +46,7 @@ for file in files:
     file2.FlushCache()
     file2 = None
 
-#Calculate areas of each class
+#Optional, calculate areas covered by each sky quality class and save to CSV file.
 files = glob.glob(working_dir + "/ALRclass*.tif")
 re_date_str = '(?<=ALRclass_)[0-9]{8}'
 
