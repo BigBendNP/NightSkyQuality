@@ -1,5 +1,6 @@
 # Used to create polygons from classified ALR data with geopandas, and
-# add time-aware data
+# add time-aware data. The resulting shapefile can be used to create a Web App with AGOL or Javascript API for ArcGIS
+# to visualize the changes in ALR over time.
 
 import glob
 import os
@@ -41,5 +42,5 @@ gdf_all.crs = {'init': 'epsg:4326'}
 #Calculate area in km^2
 gdf_all['geometry'].to_crs({'init':'epsg:3083'}).map(lambda p: p.area/10**6)
 
-#Save output as shapefile -- this can 
+#Save output as shapefile
 gdf_all.to_file(driver = 'ESRI Shapefile', filename = '../May_Nov_ALR_2012-19.shp')
