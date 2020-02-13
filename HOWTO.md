@@ -53,4 +53,5 @@ for %%I in (..\..\Data\RasterData\DNB_VIIRS_EOG\May_Nov_data\*.tgz) do (echo %%I
 
 ## Other
 * `CreateMosaicDataset.py` is a quick and dirty way to create a mosaic dataset of your ALR raster outputs, which can then be manipulated to display changes in ALR over time.
-* `Reclassify_ALR_rasters.py` is similarly a quick way to produce rasters classified by night-sky quality classes, i.e. good, moderate, poor and Milky Way invisible, per Duriscoe et al
+* `Reclassify_ALR_rasters.py` is similarly a quick way to produce rasters classified by night-sky quality classes, i.e. good, moderate, poor and Milky Way invisible, per Duriscoe et al.
+* `ALR_raster_to_time-aware_polygon.py` generates a polygon feature class from the ALR raster outputs, calculates area and percent cover, and adds a date field that can be used to publish time-aware data on ArcGIS Online.
