@@ -1,4 +1,3 @@
-# “C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv.bat” 
 # Used to create polygons from classified ALR data with geopandas, and
 # add time-aware data
 
@@ -11,7 +10,9 @@ from rasterio.features import shapes
 import re
 import pandas as pd
 
-working_dir = r'U:/GIS_PROJECTS/CARTO/2019_CARTO_NightRadianceModel/Data/RasterData/ALR_outputs/May_Nov_ALR/' #add this in
+in_proj = 4326
+out_proj = 3083 #Texas equal-area Albers -- used for calculating areas covered by each sky quality class
+working_dir = r'../Data/RasterData/ALR_outputs/May_Nov_ALR/'
 os.chdir(working_dir)
 files = glob.glob('ALRclass_*.tif')
 re_date = '(?<=_)[0-9]{6}'
@@ -40,9 +41,5 @@ gdf_all.crs = {'init': 'epsg:4326'}
 #Calculate area in km^2
 gdf_all['geometry'].to_crs({'init':'epsg:3083'}).map(lambda p: p.area/10**6)
 
-gdf_all.to_file(driver = 'ESRI Shapefile', filename = 'C:/Users/kabbott/Documents/May_Nov_ALR_2012-19.shp')
-
-
-#gdf_all.to_file(driver = 'FileGDB', '../../../BIBE_CORE_NightRadiance.gdb', layer = 'test')
-
-
+#Save output as shapefile -- this can 
+gdf_all.to_file(driver = 'ESRI Shapefile', filename = '../May_Nov_ALR_2012-19.shp')
