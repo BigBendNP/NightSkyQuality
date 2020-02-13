@@ -49,7 +49,7 @@ Calculating the sum of upward radiance at a single annulus across the entire ima
 | **0** | **1** | **0** | **1** | **0** | 
 | **0** | **0** | **1** | **0** | **0** |
 
-The output convolution for each annulus is then normalized by the distance weighting parameter and then all normalized outputs are summed together to produce a complete ALR raster. Next, the raster is multiplied by the calibration constant C = 1/562.72, to relate model output to observational values of ALR. The convolution makes use of a Fast Fourier Transform, and the time to process a single VIIRS image for the Big Bend area (about 350,000 km<sup></sup>) was about 10 minutes on a single machine. 
+The output convolution for each annulus is then normalized by the distance weighting parameter and then all normalized outputs are summed together to produce a complete ALR raster. Next, the raster is multiplied by the calibration constant C = 1/562.72, to relate model output to observational values of ALR. The convolution makes use of a Fast Fourier Transform, and the time to process a single VIIRS image for the Big Bend area (about 350,000 km<sup></sup>), including opening the compressed image file and clipping, was about 10 minutes on a single machine. 
 
 For more information on how to calculate ALR for your own region, check out the [how-to page](https://github.com/katyabbott/nps-night-rad/blob/master/HOWTO.md).
 
