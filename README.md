@@ -20,7 +20,7 @@ The main script in this repository, `Clip_raster_and_calculate_ALR_Python.py`, t
 By calculating ALR and the associated sky quality over the dates available from the VIIRS instrument, we can begin to quantify how night-sky quality is changing over time, and identify threat to our night skies from light pollution elsewhere. 
 
 ## How the algorithm works
-[Duriscoe et al. (2018)](https://www.researchgate.net/publication/324789721_A_simplified_model_of_all-sky_artificial_sky_glow_derived_from_VIIRS_DayNight_band_data) used [VIIRs Day/Night Band upward radiance](https://maps.ngdc.noaa.gov/viewers/VIIRS_DNB_nighttime_imagery/index.html) to calculate what they called the all-sky average light pollution ratio (ALR), a unitless ratio of anthropogenic to natural conditions that takes into account the effects of skyglow over the entire hemisphere of vision.
+[Duriscoe et al. (2018)](https://www.researchgate.net/publication/324789721_A_simplified_model_of_all-sky_artificial_sky_glow_derived_from_VIIRS_DayNight_band_data) used the Suomi NPP satellite's [Visible Infrared Imaging Radiometer Suite nighttime sensor (the Day/Night Band)](https://maps.ngdc.noaa.gov/viewers/VIIRS_DNB_nighttime_imagery/index.html), which measures nighttime upward radiance, to calculate what they called the all-sky average light pollution ratio (ALR), a unitless ratio of anthropogenic to natural conditions that takes into account the effects of skyglow over the entire hemisphere of vision.
 
 <p align="center">
   <img src="https://www.nps.gov/subjects/nightskies/images/panoramic-big_1.jpg?maxwidth=650&autorotate=false">
