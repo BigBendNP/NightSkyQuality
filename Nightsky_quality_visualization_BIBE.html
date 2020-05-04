@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nighttime Sky Quality Visualization</title>
+  <style>
+    @font-face { font-family: FrutigerRoman; src: url('FrutigerLTStd-Roman.otf'); }
+    @font-face { font-family: FrutigerLight; src: url('FrutigerLTStd-Light.otf'); }
+    html,
+    body,
+
+    #viewDiv {
+      margin: 0;
+      padding: 0;
+      height: 95.65%;
+      width: 100%;
+    }
+
+    #timeSlider {
+      position: absolute;
+      left: 300px;
+      right: 300px;
+      bottom: 20px;
+      background-color: #ffffff;
+      font-family: FrutigerRoman;
+    }
+
+    #cedarPanel {
+      height: 310px;
+      width: 800px;
+      background-color: #FFFFFF;
+      opacity: .9;
+      font-family: FrutigerRoman;
+    }
+
+    header {
+      background: black;
+      height: 100px;
+      padding: 10px;
+      margin-top: -10px;
+      margin-bottom: 0px;
+    }
+
+    .header-img {
+      height: 7%;
+      width: 15%;
+      padding:0px;
+      margin-bottom: 0px;
+      float: left;
+    }
+
+    h1.header-content-inner {
+      display: inline-block;
+      font-family: FrutigerRoman;
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+
+    .biggerFont{
+      font-size: 22px;
+    }
+
+    .smallerFont{
+      font-size: 18px;
+    }
+
+    h1.header-content-inner a {
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+
+    #instructions {
+      width: 400px;
+      height: 400px;
+      padding: 15px;
+      font-size: 15px;
+      /* font-family: FrutigerRoman; */
+    }
+
+    h2.about-map {
+      position: fixed;
+      display: inline-block;
+      font-family: FrutigerRoman;
+      margin-top: 0px;
+      text-align: center !important;
+      z-index: 999;
+      background-color: white;
+    }
+
+    #instructions .content {
+      font-size: 15px !important;
+      margin-top: 10px;
+      height: 340px !important;
+      overflow-y: auto;
+      padding: 5px;
+      padding-right: 5px;
+    }
+
+    #alt-text-map {
+      width: 230px;
+      height: 400px;
+      padding: 15px;
+      font-size: 15px;
+    }
+
+    h2.alt-text-title {
+      position: fixed;
+      display: inline-block;
+      font-family: FrutigerRoman;
+      margin-top: 0px;
+      text-align: center !important;
+      z-index: 999;
+      font-size: 16px;
+      background-color: white;
+    }
+
+    #alt-text-map .content {
+      font-size: 15px !important;
+      margin-top: 5px;
+      height: 355px !important;
+      overflow-y: auto;
+      padding: 5px;
+      padding-right: 15px;
+    }
+
+
+    .esri-popup__header {
+      position: relative;
+      height: 50px !important;
+      font-size: 12px !important;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      background-color: #ffffff !important;
+    }
+
+    .esri-popup__main-container.esri-widget {
+      width: 400px !important;
+    }
+
+    .esri-legend__layer-caption {
+      display:none !important;
+    }
+
+    .esri-legend__layer-table {
+      margin-bottom: -10px !important;
+    }
+
+    .esri-layer-list-panel {
+      margin-top: -5px !important;
+    }
+
+    .esri-layer-list__item-title {
+      font-weight: bold !important;
+    }
+
+    .esri-layer-list-panel__content--legend .esri-legend__service {
+      padding-right: 30px !important;
+    }
+
+    p { margin:0 }
+
+  </style>
+  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <!-- in this case, we only need bar charts, so we'll load the appropriate amCharts script -->
+  <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+  <!-- load the arcgis-rest-js scripts -->
+  <script src="https://unpkg.com/@esri/arcgis-rest-request"></script>
+  <script src="https://unpkg.com/@esri/arcgis-rest-feature-layer"></script>
+  <!-- optionally load an amcharts theme; cedar provides a calcite theme -->
+  <script src="https://unpkg.com/@esri/cedar/dist/umd/themes/amCharts/calcite.js"></script>
+  <!-- load cedar -->
+  <script src="https://unpkg.com/@esri/cedar/dist/umd/cedar.js"></script>
+  <script src="https://js.arcgis.com/4.14/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/css/main.css" />
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/widgets/Expand",
+      "esri/widgets/TimeSlider",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Legend",
+      "esri/widgets/LayerList",
+      "esri/Basemap",
+      "esri/renderers/UniqueValueRenderer",
+      "esri/renderers/ClassBreaksRenderer",
+
+      "dojo/on",
+      "dojo/dom",
+      "dojo/query",
+      "dojo/mouse",
+      "dojo/dom-style",
+      "dojo/fx/Toggler",
+      "dojo/domReady!"
+    ], function (Map, MapView, Expand, TimeSlider, FeatureLayer, Legend, LayerList, Basemap, UniqueValueRenderer, ClassBreaksRenderer, on, dom, query, mouse, domStyle, Toggler) {
+
+      // Map View
+      /**************************************/
+      var map = new Map({
+        basemap: "dark-gray-vector",
+      });
+
+      var view = new MapView({
+        id: "view",
+        container: "viewDiv",
+        zoom: 5,
+        center: [-103, 29],
+        map: map
+      });
+
+      // Add symbology and renderers for visualizing data
+      const defaultSymFill = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        style: "none",
+        outline: {
+          // autocasts as new SimpleLineSymbol()
+          color: "#487a1c",
+          width: 1
+        }
+      };
+
+      // Unique-value renderer for sky quality classes
+      var rendALR = {
+        type: "unique-value",
+        field: "raster_val",
+        uniqueValueInfos: [
+        {
+          value: "1",
+          label: "Good (ALR less than 0.33)",
+          symbol: { 
+            type: "simple-fill",
+            color: [0,32,77,255],
+            outline: {
+              width: 0
+            }
+          }
+        }, {
+          value: "2",
+          label: "Moderate (ALR between 0.33 and 2.0)",
+          symbol: { 
+            type: "simple-fill",
+            color: [86,92,109,255],
+            outline: {
+              width: 0
+            }
+          }
+        }, {
+          value: "3",
+          label: "Poor (ALR between 2.0 and 10.0)",
+          symbol: { 
+            type: "simple-fill",
+            color: [167,157,117,255],
+            outline: {
+              width: 0
+            }
+          }
+        }, {
+          value: "4",
+          label: "Milky Way invisible (ALR greater than 10.0)",
+          symbol: { 
+            type: "simple-fill",
+            color: [255,234,69,255],
+            outline: {
+              width: 0
+            }
+          }
+        }],
+      };
+
+      // Class-breaks renderer for different population sizes with firefly cartography
+      var rendPop1 = {
+        type: "class-breaks",
+        field: "POP2010",
+        classBreakInfos: [
+        {
+          minValue: 0,
+          maxValue: 5000,
+          symbol: {
+            type: "simple-marker",
+            style: "circle",
+            size: "4px",
+            color: "#ddaa33",
+            outline: {
+              color: [255,255,255],
+              width: 0
+            }
+          },
+          label: "less than 5,000 people"
+        }, {
+          minValue: 5000,
+          maxValue: 10000,
+          symbol: {
+            type: "simple-marker",
+            style: "circle",
+            size: "9px",
+            color: "#ddaa33",
+            outline: {
+              color: [255,255,255],
+              width: 1
+            }
+          },
+          label: "5,000 to 10,000 people"
+        }, 
+        {
+          minValue: 10000,
+          maxValue: 100000,
+          symbol: {
+            type: "simple-marker",
+            style: "circle",
+            size: "13px",
+            color: "#ddaa33",
+            outline: {
+              color: [255,255,255],
+              width: 1
+            }
+          },
+          label: "10,000 to 100,000 people"
+        }, {
+          minValue: 100000,
+          maxValue: 1000000,
+          symbol: {
+            type: "simple-marker",
+            style: "circle",
+            size: "18px",
+            color: "#ddaa33",
+            outline: {
+              color: [255,255,255],
+              width: 1
+            }
+          },
+          label: "100,000 to 1 million people"
+        }]
+      };
+
+      // Custom symbolize Big Bend
+      var rendProtect = {
+        type: "unique-value",
+        field: "Descript",
+        defaultSymbol: defaultSymFill, 
+        defaultLabel: "Other protected areas",
+        uniqueValueInfos: [
+        {
+          value: "Big Bend National Park",
+            symbol: {
+              type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+              style: "none",
+              outline: {
+                color: "#63a827",
+                width: 2.5
+              }
+            }
+        }]
+      };
+
+      // Add pop-up template info for cities and protected areas
+
+      var template1 = {
+        // autocasts as new PopupTemplate()
+        title: "{CITY_NM}, {LOCATION}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "POP2010", // The field whose values you want to format
+                label: "Population as of 2010 census",
+                format: {
+                  digitSeparator: true
+                }
+            }]
+          }]
+      };
+
+      var template2 = {
+        // autocasts as new PopupTemplate()
+        title: "{Descript}",
+        content: [
+          {
+            type: "fields",
+            fieldInfos: [
+              {
+                fieldName: "FeatureTyp", // The field whose values you want to format
+                label: "Type"
+                },
+              {
+                fieldName: "Acres", // The field whose values you want to format
+                label: "Size in acres",
+                format: {
+                  digitSeparator: true
+                }
+            }]
+          }]
+      };
+
+      // ALR layer
+      const ALRLayer = new FeatureLayer({
+        url: 
+        "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/ALR_12_19/FeatureServer/0",
+        renderer: rendALR,
+        title: 'Night sky quality (ALR)',
+        opacity: 0.9
+      });
+
+      // population layer
+      const popLayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/MX_TX_NM_Cities_pop/FeatureServer/0",
+        title: 'City population (2010 census)',
+        renderer: rendPop1,
+        opacity: .8,
+        visible: false,
+        popupTemplate: template1// "{POP2010} people lived in {CITY_NM} as of the 2010 census"}
+      });
+
+      // protected area layer
+      const protectLayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/BIBE_BND_RegionalProtectedAreas_py/FeatureServer/0",
+        title: 'BIBE regional protected areas',
+        opacity: 0.6,
+        renderer: rendProtect,
+        popupTemplate: template2
+      });
+
+      map.add(ALRLayer);
+      map.add(protectLayer);
+      map.add(popLayer);
+
+      // TimeSlider Widget
+      const timeSlider = new TimeSlider({
+        container: "timeSlider",
+        mode: "instant",
+        view: view
+      });
+      view.ui.add(timeSlider, "manual")
+
+      view.whenLayerView(ALRLayer).then(function(lv) {
+          const fullTimeExtent = ALRLayer.timeInfo.fullTimeExtent;
+
+          // set up time slider properties
+          // Date.UTC starts slider at the EXACT date of the feature class
+          timeSlider.fullTimeExtent = {
+            start: new Date(Date.UTC(2012,4,1,6,0,0)),
+            end: new Date(Date.UTC(2019,10,1,6,0,0))
+          },
+          timeSlider.stops = {
+            interval: {
+              value: 6,
+              unit: "months"
+             }
+          }
+        });
+
+      // Add expand widgets for chart, layerlist and About
+
+      var cedarExpand = new Expand({
+          expandIconClass: "esri-icon-chart",
+          expandTooltip: "Night-sky graph",
+          expanded: false,
+          view: view,
+          content: document.getElementById("cedarPanel")
+        });
+
+      const instructionsExpand = new Expand({
+            expandIconClass: "esri-icon-description",
+            expandTooltip: "About this project",
+            expanded: false,
+            view: view,
+            content: document.getElementById("instructions"),
+            group: "top-left"
+          });
+
+      const alttextExpand = new Expand({
+            expandIconClass: "esri-icon-comment",
+            expandTooltip: "Alternative text for sky quality map",
+            expanded: false,
+            view: view,
+            content: document.getElementById("alt-text-map")
+          });
+
+      const layerList = new LayerList({
+        view: view,
+        listItemCreatedFunction: function(event) {
+          const item = event.item;
+
+          if (item.title == 'Night sky quality (ALR)') {
+            item.open = true;
+            item.panel = {
+              content: "legend",
+              open: true
+            };
+          }
+          if (item.title == "BIBE regional protected areas") {
+            item.open = true;
+            item.panel = {
+              content: "legend",
+              open: true
+            };
+            }
+
+          if (item.title == "City population (2010 census)") {
+            item.open = false;
+            item.panel = {
+              content: "legend",
+              open: false
+            };
+            }
+        }
+      });
+
+      const listExpand = new Expand({
+        expandIconClass: "esri-icon-layers",
+        expandTooltip: "List of layers",
+        view: view,
+        expanded: true,
+        content: layerList,
+        group: "top-left"
+      });
+
+      setTimeout(function () {
+        layerList.operationalItems.reverse();
+      }, 1200);
+
+      view.ui.add(cedarExpand, "top-trailing");
+      view.ui.add(alttextExpand, "bottom-right");
+
+      setTimeout(function () {
+        view.ui.move("zoom", "top-left");
+        view.ui.add(listExpand, "top-left");
+        view.ui.add(instructionsExpand, "top-left");
+      }, 1210);
+
+      var definition = {
+            type: 'line',
+            style: {
+              colors: ["#000000", "#0072B2", "#CC79A7", "#F0E442"]
+            },
+            datasets: [
+          {
+            "url": "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/ALR_12_19/FeatureServer/0",
+            "name": "ALR1",
+            "query": {
+              "orderByFields": "DateTime",
+              "where": "raster_val = 1"
+            },
+            "join": "MMYY"
+          },
+          {
+            "url": "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/ALR_12_19/FeatureServer/0",
+            "name": "ALR2",
+            "query": {
+              "orderByFields": "DateTime",
+              "where": "raster_val = 2"
+            },
+            "join": "MMYY"
+        },
+        {
+            "url": "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/ALR_12_19/FeatureServer/0",
+            "name": "ALR3",
+            "query": {
+              "orderByFields": "DateTime",
+              "where": "raster_val = 3"
+            },
+            "join": "MMYY"
+          },
+          {
+            "url": "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/ALR_12_19/FeatureServer/0",
+            "name": "ALR4",
+            "query": {
+              "orderByFields": "DateTime",
+              "where": "raster_val = 4"
+            },
+            "join": "MMYY"
+          }
+        ],
+            series: [
+            {
+              "category": {"field": "MMYY", "label": "date"},
+              "value": {"field": "pct_cvr", "label": "% good sky quality"},
+              "source": "ALR1"
+            },
+            {
+              "category": {"field": "MMYY", "label": "date"},
+              "value": {"field": "pct_cvr", "label": "% moderate sky quality"},
+              "source": "ALR2"
+            },
+            {
+              "category": {"field": "MMYY", "label": "date"},
+              "value": {"field": "pct_cvr", "label": "% poor sky quality"},
+              "source": "ALR3"
+            },
+            {
+              "category": {"field": "MMYY", "label": "date"},
+              "value": {"field": "pct_cvr", "label": "% Milky Way invisible"},
+              "source": "ALR4"
+            }],
+            overrides: {
+          "categoryAxis": {
+              "parseDates": true,
+              "equalSpacing": true,
+              "tickLength": 5,
+              "dateFormats": [{'period':"DD",'format':'MMM YYYY'}, {'period':"MM",'format':'MMM YYYY'}, {'period': 'YYYY', 'format': 'MMM YYYY'}],
+              "labelRotation": 0,
+              "autoGridCount": false,
+              "gridCount": 14
+            },
+            "valueAxes": [{
+              "title": "Percent area covered by sky quality class"
+            }],
+            "legend": {
+              "useGraphSettings": true,
+              "valueText":"",
+              "position": "right"
+            },
+            "chartCursor": {
+              "oneBalloonOnly": true,
+              "categoryBalloonDateFormat": 'MMM YYYY'
+            },
+          "creditsPosition": "top-right",
+          "dataDateFormat": 'MM-YYYY',
+          "fontFamily": "FrutigerRoman",
+          "labelText": "[[category]]",
+          "titles": [{"text": "Changes in sky quality in the Big Bend region, 2012-2019", "size": 14}]
+          }
+        };
+
+          var cedarChart = new cedar.Chart('cedarPanel', definition);
+          cedarChart.show();
+    });
+
+  </script>  
+<body> 
+    <header>
+      <div class="header-content">
+          <div class="header-content-inner">
+              <a href="https://nps.gov/bibe"><img style="vertical-align:middle" src="AH_large_shaded_4C_pc_BLACKbackground_resized.jpg" alt = "Big Bend National Park website" width="69" height="90"></a>
+              <h1 class="header-content-inner">
+                <span class="biggerFont"><a href="https://github.com/katyabbott/nps-night-rad">Big Bend National Park Nighttime Sky Quality</a></span>
+                <br/><br/>
+                <span class="smallerFont"><a href="https://nps.gov/bibe">National Park Service </a></span>
+              </h1>
+            </div>
+          </div>
+    </header> 
+    <div id="viewDiv">
+    <div id="timeSlider"></div>
+    <div id="cedarPanel" class="esri-widget"></div>
+  </div>
+    <div id="instructions" class="esri-widget">
+        <h2 class="about-map"> About this map </h2> <br/>
+        <div class = "content">
+          <p style="text-indent: 20px">This project visualizes nighttime sky quality in Big Bend National Park and the surrounding area. Nighttime sky quality can be quantified in a variety of ways, but one of the best metrics is the ratio of human-caused light to natural light over the entire sky, or the Anthropogenic Light Ratio (ALR). </p> 
+          <p style="text-indent: 20px"> ALR was caclulated throughout a 300 kilometer radius around Big Bend National Park, using open-source geospatial tools and <a href='https://eogdata.mines.edu/download_dnb_composites.html'>satellite images of average nighttime radiance</a>. The data is available from 2012-2019, and we chose to calculate ALR for the months of May and November to obtain a representative picture of how night sky quality has changed over time. </p> 
+          <p style="text-indent: 20px"> We can separate ALR data into four categories of sky quality: good, moderate, poor, and Milky Way invisible. In Big Bend National Park, an international dark-sky park, sky quality is good, but it is threatened by increasing light pollution in the greater Trans-Pecos area. </p> 
+          <p style="text-indent: 20px"> Use the time slider at the bottom to see changes from 2012 to 2019. The chart in the upper right-hand corner illustrates the percentage of the total Big Bend region that each sky quality class covers at various points in time. Click on the legend elements to the right to turn on and off different lines. </p>
+          <p style="text-indent: 20px"> Use the layer list in the top-left corner to turn on the city population layer and see how city geographies in Texas and Mexico relate to night sky quality. You can find out more by clicking on the city and viewing the pop-up. 
+          <p style="text-indent: 20px"> You can learn more about on this project and the methodology <a href='https://github.com/katyabbott/nps-night-rad'>here</a>. In addition, the code used for this project is publicly available and can be used to create nighttime sky quality maps for your own region.</p> 
+        </div>
+    </div>
+    <div id="alt-text-map" class="esri-widget">
+      <h2 class="alt-text-title"> Alternative text</h2> <br/>
+      <div class = "content">
+        <p style="text-indent: 15px">In May 2012, the first year that data is available, 71 percent of the Big Bend region has good sky quality. This region is depicted by a radius of 300 kilometers around the park itself. Small patches of poor sky quality  and Milky Way invisible can be found around the cities of Chihuahua and Monclova to the south in Mexico, and the cities of Midland and Odessa to the north in the United States. While most of the areas of moderate and poor sky quality coincide with the locations of major cities, there is a large patch of moderate and poor sky quality to the north of Big Bend National Park in the northern Trans-Pecos region that corresponds with oil and gas infrastructure in the Permian Basin.</p>
+        <p style="text-indent: 15px">In November 2012, May 2013 and November 2013, the patch of poor sky quality in the northern Trans-Pecos expands outward. Moderate and poor sky quality to the east of the park, near Eagle Pass, TX, and Piedras Negras, Mex.,  expand. Overall, between May 2012 and November 2013, the percentage of the region with good sky quality drops to 66 percent, and the percent of the region with poor sky quality increases from 6.3 percent to 10.4 percent, while the total area where the Milky Way is invisible remains about the same. </p>
+        <p style="text-indent: 15px">In May 2014, the patch of Milky Way invisible sky quality around Midland and Odessa increases significantly. In November of the same year, this patch shrinks, but a larger patch of Milky Way invisible sky quality is present north of Pecos. These patches are fairly consistent from 2014 through 2016, with some ebbs and flows between the months, and this trend is also true throughout the rest of the region. There are two distinct patches, one centered on Midland-Odessa and one centered on Pecos.</p>
+        <p style="text-indent: 15px">In 2017, these two patches of Milky Way invisible sky quality appear to double in size in the northern Trans-Pecos. They continue to expand until, in November 2019, they are about triple the size of the largest patch that was present in 2016. Surrounding these two patches is a greater swath of poor and moderate sky quality that extends west to Van Horn, east to Eldorado, and south to Alpine.</p>
+        <p style="text-indent: 15px">Throughout the entire study period, from 2012 through 2019, the closest major source of light to the park comes from Ojinaga and Presidio, to the west of Big Bend Ranch State Park. While these cities exhibit moderate and poor sky quality, expansion is limited, with moderate sky quality conditions occasionally encroaching on the west side of Big Bend Ranch State Park.</p>
+        <p style="text-indent: 15px">Overall, from May 2012 to November 2019, the percent of the region with good sky quality decreases from 71.1 percent to 59.8 percent. Moderate sky quality over the region increases from 22.1 percent to 23.8 percent. Poor sky quality percent cover increases from 6.3 percent to 9.6 percent. The percent of the region where the Milky Way is invisible increases from 0.5 percent to 6.8 percent.</p>
+      </div>
+    </div>
+</body>
+
+</html>
