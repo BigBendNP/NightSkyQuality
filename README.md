@@ -1,6 +1,8 @@
 # Visualizing changes in night sky quality in Big Bend National Park
 This repository contains a collection of scripts for calculating all-sky average light pollution from satellite data and visualizing changes in night-time sky quality over time. It was created to understand the effects of nearby and faraway light sources on Big Bend National Park's sky quality, using open-source tools. 
 
+To see the data visualization from 2012 to 2019, click [here](https://bigbendnp.github.io/NightSkyQuality/pages/NightSkyViz.html). To learn more about the methodology, read on.
+
 <p align="center">
   <img src="images/ALR_classification_May_Nov_cropped.png?raw=true">
   <br/> Night sky quality calculated biannually between 2012 to 2019 in the Big Bend region, visualized by sky-quality classes.
