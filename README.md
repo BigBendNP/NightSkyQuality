@@ -4,7 +4,9 @@ This repository contains a collection of scripts for calculating all-sky average
 To see the data visualization from 2012 to 2019, click [here](https://bigbendnp.github.io/nightskyquality/pages/nightskyviz.html). To learn more about the methodology, read on.
 
 <p align="center">
+  <a href="https://bigbendnp.github.io/nightskyquality/pages/nightskyviz.html">
   <img src="images/ALR_classification_May_Nov_cropped.png?raw=true">
+  </a>
   <br/> Night sky quality calculated biannually between 2012 to 2019 in the Big Bend region, visualized by sky-quality classes.
 </p>
 
