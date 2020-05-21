@@ -217,6 +217,13 @@
     .esri-popup__main-container.esri-widget {
       width: 400px !important;
     }
+    
+     @media screen and (max-width: 600px) {
+      .esri-popup__main-container.esri-widget {
+        width: 200px !important;
+        padding-bottom: 30px !important;
+      }
+    }
 
     .esri-legend__layer-caption {
       display:none !important;
@@ -287,7 +294,14 @@
         container: "viewDiv",
         zoom: 5,
         center: [-103, 29],
-        map: map
+        map: map,
+        popup: {
+          dockEnabled: false,
+          dockOptions: {
+            buttonEnabled: false,
+            breakpoint: false,
+          }
+        }
       });
 
 
