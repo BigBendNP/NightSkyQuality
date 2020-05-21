@@ -3,53 +3,105 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="initial-scale=1,maximum-scale=5">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, height = device-height, initial-scale=1.0">
   <title>Nighttime Sky Quality Visualization</title>
   <style>
     @font-face { font-family: FrutigerRoman; src: url('FrutigerLTStd-Roman.otf'); }
     @font-face { font-family: FrutigerLight; src: url('FrutigerLTStd-Light.otf'); }
-    html,
-    body,
+    html, body,
 
     #viewDiv {
       margin: 0;
       padding: 0;
-      height: 95.65%;
+      height: 95.4%;
       width: 100%;
     }
 
+    @media screen and (max-width: 600px) {
+      #viewDiv {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
     #timeSlider {
-      position: absolute;
-      left: 300px;
-      right: 300px;
-      bottom: 20px;
+      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50vw;
+      bottom: -67vh;
       background-color: #ffffff;
       font-family: FrutigerRoman;
     }
 
-    #cedarPanel {
-      height: 310px;
-      width: 800px;
-      background-color: #FFFFFF;
-      opacity: .9;
-      font-family: FrutigerRoman;
+    @media screen and (max-width: 600px), (max-height: 600px) {
+      #timeSlider {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50vw;
+        height: 5vh;
+        bottom: -64vh;
+        margin-bottom: 30vh !important;
+        background-color: #ffffff;
+        font-family: FrutigerRoman;
+      }
     }
+
+    #cedarPanel {
+        height: 30vh;
+        width: 85vw;
+        background-color: #FFFFFF;
+        opacity: .9;
+        font-family: FrutigerRoman;
+      }
+
+    @media screen and (max-width: 600px), (max-height: 600px) {
+      #cedarPanel {
+        display: none;
+      }
+    } 
 
     header {
       background: black;
-      height: 100px;
+      height: 12vh;
       padding: 10px;
       margin-top: -10px;
       margin-bottom: 0px;
     }
 
-    .header-img {
-      height: 7%;
-      width: 15%;
-      padding:0px;
+    @media screen and (max-width: 600px) {
+      header {
+        background: black;
+        height: 8vh;
+        padding: 10px;
+        margin-top: -10px;
+        margin-bottom: 0px;
+      }
+    }
+
+    img {
+      height: 11vh;
+      width: 8.4vh;
+      padding-top:10px;
       margin-bottom: 0px;
       float: left;
+    }
+
+    @media screen and (max-width: 600px) {
+      img {
+        height: 7vh;
+        width: 5.3vh;
+        padding-top:10px;
+        margin-bottom: 0px;
+        float: left;
+      }
     }
 
     h1.header-content-inner {
@@ -57,16 +109,16 @@
       font-family: FrutigerRoman;
       color: white;
       padding: 10px;
-      font-size: 16px;
+      font-size: 1vw;
       vertical-align: middle;
     }
 
     .biggerFont{
-      font-size: 22px;
+      font-size: 1.9vmax;
     }
 
     .smallerFont{
-      font-size: 18px;
+      font-size: 1.6vmax;
     }
 
     h1.header-content-inner a {
@@ -75,10 +127,10 @@
     }
 
     #instructions {
-      width: 400px;
-      height: 400px;
+      width: 50vw;
+      height: 40vh;
       padding: 15px;
-      font-size: 15px;
+      font-size: 1em;
       /* font-family: FrutigerRoman; */
     }
 
@@ -93,19 +145,29 @@
     }
 
     #instructions .content {
-      font-size: 15px !important;
+      font-size: 1em !important;
       margin-top: 10px;
-      height: 340px !important;
+      height: 33vh !important;
       overflow-y: auto;
       padding: 5px;
       padding-right: 5px;
     }
 
     #alt-text-map {
-      width: 230px;
-      height: 400px;
+      width: 20vw;
+      height: 32vw;
       padding: 15px;
       font-size: 15px;
+    }
+
+  @media screen and (max-width: 600px), (max-height: 600px) {
+      #alt-text-map {
+        width: 60vw;
+        height: 32vw;
+        padding: 15px;
+        padding-bottom: 35vw;
+        font-size: 15px;
+      }
     }
 
     h2.alt-text-title {
@@ -115,14 +177,14 @@
       margin-top: 0px;
       text-align: center !important;
       z-index: 999;
-      font-size: 16px;
+      font-size: 1em;
       background-color: white;
     }
 
     #alt-text-map .content {
-      font-size: 15px !important;
+      font-size: .8em !important;
       margin-top: 5px;
-      height: 355px !important;
+      height: 28vw !important;
       overflow-y: auto;
       padding: 5px;
       padding-right: 15px;
@@ -214,6 +276,7 @@
         center: [-103, 29],
         map: map
       });
+
 
       // Add symbology and renderers for visualizing data
       const defaultSymFill = {
@@ -456,23 +519,15 @@
           }
         });
 
-      // Add expand widgets for chart, layerlist and About
-
-      var cedarExpand = new Expand({
-          expandIconClass: "esri-icon-chart",
-          expandTooltip: "Night-sky graph",
-          expanded: false,
-          view: view,
-          content: document.getElementById("cedarPanel")
-        });
-
+      // Add expand widgets for layerlist and About
       const instructionsExpand = new Expand({
             expandIconClass: "esri-icon-description",
             expandTooltip: "About this project",
             expanded: false,
             view: view,
             content: document.getElementById("instructions"),
-            group: "top-left"
+            group: "collapse",
+            mode: "floating"
           });
 
       const alttextExpand = new Expand({
@@ -480,7 +535,9 @@
             expandTooltip: "Alternative text for sky quality map",
             expanded: false,
             view: view,
-            content: document.getElementById("alt-text-map")
+            group: "collapse",
+            content: document.getElementById("alt-text-map"),
+            mode: "floating"
           });
 
       const layerList = new LayerList({
@@ -519,21 +576,40 @@
         view: view,
         expanded: true,
         content: layerList,
-        group: "top-left"
+        group: "collapse",
+        mode: "floating"
       });
 
       setTimeout(function () {
         layerList.operationalItems.reverse();
       }, 1200);
 
-      view.ui.add(cedarExpand, "top-trailing");
-      view.ui.add(alttextExpand, "bottom-right");
-
       setTimeout(function () {
         view.ui.move("zoom", "top-left");
         view.ui.add(listExpand, "top-left");
         view.ui.add(instructionsExpand, "top-left");
       }, 1210);
+
+      var mq = window.matchMedia("screen and (max-width: 600px), (max-height: 600px)");
+      
+      if (mq.matches) {
+        view.ui.add(alttextExpand, "top-right");
+        }
+      else {
+
+          view.ui.add(alttextExpand, "bottom-right");
+
+          var cedarExpand = new Expand({
+          expandIconClass: "esri-icon-chart",
+          expandTooltip: "Night-sky graph",
+          expanded: false,
+          group: "collapse",
+          view: view,
+          content: document.getElementById("cedarPanel"),
+          mode: "floating"
+        });
+
+      view.ui.add(cedarExpand, "top-trailing");
 
       var definition = {
             type: 'line',
@@ -631,6 +707,7 @@
 
           var cedarChart = new cedar.Chart('cedarPanel', definition);
           cedarChart.show();
+      }
     });
 
   </script>  
@@ -638,11 +715,11 @@
     <header>
       <div class="header-content">
           <div class="header-content-inner">
-              <a href="https://bigbendnp.github.io/nightskyquality" target="_blank"><img style="vertical-align:middle" src="AH_large_shaded_4C_pc_BLACKbackground_resized.jpg" alt = "Big Bend National Park website" width="69" height="90"></a>
+              <a href="https://nps.gov/bibe"><img style="vertical-align:middle" src="AH_large_shaded_4C_pc_BLACKbackground_resized.jpg" alt = "Big Bend National Park website" width="69" height="90"></a>
               <h1 class="header-content-inner">
-                <span class="biggerFont"><a href="https://bigbendnp.github.io/nightskyquality/pages/nightskyviz.html" target="_blank">Big Bend National Park Nighttime Sky Quality</a></span>
+                <span class="biggerFont"><a href="https://github.com/katyabbott/nps-night-rad">Big Bend National Park Nighttime Sky Quality</a></span>
                 <br/><br/>
-                <span class="smallerFont"><a href="https://nps.gov/bibe" target="_blank">National Park Service </a></span>
+                <span class="smallerFont"><a href="https://nps.gov/bibe">National Park Service </a></span>
               </h1>
             </div>
           </div>
@@ -655,11 +732,11 @@
         <h2 class="about-map"> About this map </h2> <br/>
         <div class = "content">
           <p style="text-indent: 20px">This project visualizes nighttime sky quality in Big Bend National Park and the surrounding area. Nighttime sky quality can be quantified in a variety of ways, but one of the best metrics is the ratio of human-caused light to natural light over the entire sky, or the Anthropogenic Light Ratio (ALR). </p> 
-          <p style="text-indent: 20px"> ALR was caclulated throughout a 300 kilometer radius around Big Bend National Park, using open-source geospatial tools and <a href='https://eogdata.mines.edu/download_dnb_composites.html' target="_blank">satellite images of average nighttime radiance</a>. The data is available from 2012-2019, and we chose to calculate ALR for the months of May and November to obtain a representative picture of how night sky quality has changed over time. </p> 
+          <p style="text-indent: 20px"> ALR was caclulated throughout a 300 kilometer radius around Big Bend National Park, using open-source geospatial tools and <a href='https://eogdata.mines.edu/download_dnb_composites.html'>satellite images of average nighttime radiance</a>. The data is available from 2012-2019, and we chose to calculate ALR for the months of May and November to obtain a representative picture of how night sky quality has changed over time. </p> 
           <p style="text-indent: 20px"> We can separate ALR data into four categories of sky quality: good, moderate, poor, and Milky Way invisible. In Big Bend National Park, an international dark-sky park, sky quality is good, but it is threatened by increasing light pollution in the greater Trans-Pecos area. </p> 
           <p style="text-indent: 20px"> Use the time slider at the bottom to see changes from 2012 to 2019. The chart in the upper right-hand corner illustrates the percentage of the total Big Bend region that each sky quality class covers at various points in time. Click on the legend elements to the right to turn on and off different lines. </p>
           <p style="text-indent: 20px"> Use the layer list in the top-left corner to turn on the city population layer and see how city geographies in Texas and Mexico relate to night sky quality. You can find out more by clicking on the city and viewing the pop-up. 
-          <p style="text-indent: 20px"> You can learn more about on this project and the methodology <a href='https://bigbendnp.github.io/nightskyquality' target="_blank">here</a>. In addition, the code used for this project is publicly available and can be used to create nighttime sky quality maps for your own region.</p> 
+          <p style="text-indent: 20px"> You can learn more about on this project and the methodology <a href='https://github.com/katyabbott/nps-night-rad'>here</a>. In addition, the code used for this project is publicly available and can be used to create nighttime sky quality maps for your own region.</p> 
         </div>
     </div>
     <div id="alt-text-map" class="esri-widget">
