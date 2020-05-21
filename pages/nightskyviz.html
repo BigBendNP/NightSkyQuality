@@ -113,8 +113,21 @@
       vertical-align: middle;
     }
 
+    .biggerFont-mobile{
+      font-size: 1.9vmax;
+      display: none;
+    }
+
     .biggerFont{
-      font-size: 1.8vmax;
+      font-size: 1.9vmax;
+    }
+
+    @media (max-width: 600px) {
+      .biggerFont-mobile{
+        font-size: 1.9vmax;
+        display: inline-block;
+      }
+      .biggerFont{ display: none; }
     }
 
     .smallerFont{
@@ -718,6 +731,7 @@
               <a href="https://nps.gov/bibe"><img style="vertical-align:middle" src="AH_large_shaded_4C_pc_BLACKbackground_resized.jpg" alt = "Big Bend National Park website" width="69" height="90"></a>
               <h1 class="header-content-inner">
                 <span class="biggerFont"><a href="https://github.com/katyabbott/nps-night-rad">Big Bend National Park Nighttime Sky Quality</a></span>
+                <span class="biggerFont-mobile"><a href="https://github.com/katyabbott/nps-night-rad">Big Bend NP Night Sky Quality</a></span>
                 <br/><br/>
                 <span class="smallerFont"><a href="https://nps.gov/bibe">National Park Service </a></span>
               </h1>
