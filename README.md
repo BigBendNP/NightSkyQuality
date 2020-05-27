@@ -57,6 +57,8 @@ The output convolution for each annulus is then normalized by the distance weigh
 
 For more information on how to calculate ALR for your own region, check out the [how-to page](https://github.com/bigbendnp/nightskyquality/blob/master/HOWTO.md).
 
+This repository and the data visualization were developed by Katy Abbott, a Geoscientists-in-the-Parks intern at Big Bend National Park in 2019-2020.
+
 ## License
 
 See [LICENSE.txt](/LICENSE.txt)
